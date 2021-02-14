@@ -32,16 +32,16 @@ const showImages = (images) => {
 
 const getImages = (query) => {
   gallery.innerHTML = ""; //reset gallery
-  displayLoading(document.getElementById("loading"));
+  displayLoading(document.getElementById("loadImage"));
   fetch(`https://pixabay.com/api/?key=${KEY}=${query}&image_type=photo&pretty=true`)
     .then(response => response.json())
-    .then(data => displaySearchImage(data))
+    .then(data => imagesSearch(data))
     .catch(err => console.log(err))
 
 }
 
 // display image
-const displaySearchImage = (data) => {
+const imagesSearch = (data) => {
 
   if (data.total != 0) {
     showImages(data.hits);
@@ -55,7 +55,7 @@ const displaySearchImage = (data) => {
       </div>
     `;
   }
-  displayLoading(document.getElementById("loading"));
+  displayLoading(document.getElementById("loadImage"));
 }
 
 const displayLoading = (elementLoad) => {
@@ -65,18 +65,20 @@ const displayLoading = (elementLoad) => {
 let slideIndex = 0;
 const selectItem = (event, img) => {
   let element = event.target;
-  element.classList.add('added');
-
+  element.classList.toggle('added');
+ 
   let item = sliders.indexOf(img);
   if (item === -1) {
     sliders.push(img);
   } else {
-    // unselect a image
-    sliders = sliders.filter((element, index, newSliders) => index != newSliders.indexOf(img));
-    element.classList.remove("added");
-    // alert('Hey, Already added !')
+    
+      const valueToRemove = img
+     const filteredItems = sliders.filter(slider => slider !== valueToRemove)
+    //alert('Hey, Already added !')
+    sliders=filteredItems
   }
 }
+
 var timer
 const createSlider = () => {
   // check slider image length
@@ -141,7 +143,7 @@ const changeSlide = (index) => {
 }
 
 
-// add function when someone search img using button or Enter key
+
 const searchImage = () => {
   document.getElementById("error-message").innerHTML = "";
   document.querySelector('.main').style.display = 'none';
@@ -172,7 +174,7 @@ searchInput.addEventListener("keydown", function (event) {
 sliderBtn.addEventListener('click', function () {
   // check for negative or 0 value of the timer
   if (parseInt(document.getElementById("duration").value) <= 0) {
-    alert("Duration time can't negative or zero");
+    alert("negative time can,t zero ");
     return;
   }
   createSlider()
